@@ -75,6 +75,13 @@ details[open] summary::after { content: "–"; }
 details p { color: var(--mute); margin-top: 10px; font-size: 15px; }
 .faq { max-width: 780px; margin: 0 auto; }
 
+.news { max-width: 780px; margin: 0 auto; }
+.rel { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px 24px; margin-bottom: 12px; }
+.rel h3 { font-size: 18px; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.rel h3 small { color: var(--mute); font-weight: 400; font-size: 13.5px; }
+.rel ul { margin: 10px 0 0 18px; color: var(--mute); font-size: 15px; }
+.rel li { margin: 3px 0; }
+.rel .new { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: rgba(83,252,24,.15); color: var(--green); }
 footer { margin-top: 100px; border-top: 1px solid var(--line); padding: 30px 0 40px; color: var(--mute); font-size: 14px; }
 footer .wrap { display: flex; gap: 16px; flex-wrap: wrap; justify-content: space-between; }
 .final { text-align: center; padding: 100px 0 0; }
@@ -88,6 +95,7 @@ code { background: #1c1a27; padding: 2px 6px; border-radius: 6px; font-size: 14p
   <div class="links">
     <a href="#fonctions">Fonctionnalités</a>
     <a href="#installer">Installer</a>
+    <a href="#nouveautes">Nouveautés</a>
     <a href="#faq">FAQ</a>
     <a class="gh" href="https://github.com/NezuFR/DBS">GitHub</a>
   </div>
@@ -133,6 +141,24 @@ code { background: #1c1a27; padding: 2px 6px; border-radius: 6px; font-size: 14p
     <div class="step"><h3>Ajoute tes clés</h3><p>⚙ Paramètres › colle ta clé Twitch et ta clé Kick. Fais un essai avec « Enregistrer seulement », puis passe en live !</p></div>
   </div>
   <div class="warn"><b>⚠ « Windows a protégé votre ordinateur » ?</b> C'est normal : DBS est gratuit et pas encore signé numériquement (un certificat coûte plusieurs centaines d'euros par an). Clique sur <b>« Informations complémentaires »</b> puis <b>« Exécuter quand même »</b>. Ce message n'apparaît qu'une fois.</div>
+</div></section>
+
+<section id="nouveautes"><div class="wrap">
+  <h2>Nouveautés</h2>
+  <p class="sub">DBS s'améliore en continu. Télécharge toujours la dernière version avec le bouton en haut de la page.</p>
+  <div class="news">
+    <div class="rel"><h3>Version 0.26.0 <span class="new">NOUVEAU</span> <small>12 novembre 2026</small></h3><ul>
+      <li>Beaucoup moins de processeur utilisé, surtout quand tu joues</li>
+      <li>Aperçu allégé hors live et « mode repos » quand DBS est réduit</li>
+      <li>Déplacer et redimensionner les sources est plus fluide</li>
+      <li>Petites corrections d'affichage</li>
+    </ul></div>
+    <div class="rel"><h3>Version 0.25.0 <small>12 novembre 2026</small></h3><ul>
+      <li>Première version publique 🎉</li>
+      <li>Twitch + Kick en même temps, rediffusion sans musique, délai anti stream-sniping</li>
+      <li>Vumètres en temps réel, raccourcis clavier, 9 langues</li>
+    </ul></div>
+  </div>
 </div></section>
 
 <section id="faq"><div class="wrap">
