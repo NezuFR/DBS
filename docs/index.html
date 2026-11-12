@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DBS · Dual Broadcaster Software — Twitch + Kick en même temps</title>
+<meta name="description" content="Logiciel de stream gratuit pour Windows : diffuse sur Twitch et Kick en même temps, avec des rediffusions sans musique copyright.">
+<meta property="og:title" content="DBS · Dual Broadcaster Software">
+<meta property="og:description" content="Stream sur Twitch et Kick en même temps. Rediffusions sans musique copyright. Gratuit.">
+<meta property="og:image" content="https://nezufr.github.io/DBS/img/dbs-main.webp">
+<link rel="icon" href="img/favicon.ico">
+<style>
+:root { --bg: #0b0a10; --panel: #13121b; --line: #24222f; --text: #ecebf3; --mute: #9b98ad; --accent: #a78bfa; --green: #53fc18; --twitch: #9146ff; }
+* { box-sizing: border-box; margin: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font: 16px/1.6 "Segoe UI", Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+.wrap { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+
+/* nav */
+nav { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(12px); background: rgba(11,10,16,.75); border-bottom: 1px solid var(--line); }
+nav .wrap { display: flex; align-items: center; height: 64px; gap: 28px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 800; font-size: 20px; letter-spacing: -.5px; }
+.brand img { width: 32px; height: 32px; border-radius: 8px; }
+nav .links { margin-left: auto; display: flex; gap: 22px; font-size: 14.5px; }
+nav .links a { text-decoration: none; color: var(--mute); }
+nav .links a:hover { color: var(--text); }
+@media (max-width: 720px) { nav .links a:not(.gh) { display: none; } }
+
+/* hero */
+.hero { position: relative; overflow: hidden; padding: 84px 0 40px; text-align: center; }
+.hero::before { content: ""; position: absolute; inset: -40% -10% auto; height: 720px; z-index: -1;
+  background: radial-gradient(closest-side at 30% 50%, rgba(145,70,255,.35), transparent), radial-gradient(closest-side at 70% 55%, rgba(83,252,24,.16), transparent); filter: blur(10px); }
+.tag { display: inline-flex; gap: 8px; align-items: center; padding: 6px 14px; border: 1px solid var(--line); border-radius: 99px; background: var(--panel); font-size: 13.5px; color: var(--mute); }
+.tag b { color: var(--text); font-weight: 600; }
+h1 { font-size: clamp(38px, 6.4vw, 72px); line-height: 1.04; letter-spacing: -2px; font-weight: 800; margin: 22px auto 18px; max-width: 900px; }
+h1 .tw { color: var(--twitch); } h1 .kk { color: var(--green); }
+.lead { font-size: clamp(17px, 2vw, 20px); color: var(--mute); max-width: 680px; margin: 0 auto; }
+.cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin: 34px 0 12px; }
+.btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 26px; border-radius: 12px; font-weight: 700; text-decoration: none; font-size: 16.5px; border: 1px solid var(--line); background: var(--panel); transition: transform .15s, box-shadow .15s; }
+.btn:hover { transform: translateY(-2px); }
+.btn.main { background: linear-gradient(135deg, #8b5cf6, #6d28d9 55%, #3fbf1a); border: 0; color: #fff; box-shadow: 0 10px 40px rgba(139,92,246,.35); }
+.btn.main:hover { box-shadow: 0 14px 50px rgba(139,92,246,.5); }
+.small { font-size: 13.5px; color: var(--mute); }
+.shot { margin: 46px auto 0; max-width: 1100px; border-radius: 16px; border: 1px solid var(--line); overflow: hidden; box-shadow: 0 40px 120px rgba(0,0,0,.6), 0 0 0 1px rgba(167,139,250,.08); }
+.shot img { display: block; width: 100%; height: auto; }
+
+/* sections */
+section { padding: 90px 0 10px; }
+h2 { font-size: clamp(28px, 4vw, 42px); letter-spacing: -1px; line-height: 1.1; text-align: center; margin-bottom: 12px; }
+.sub { text-align: center; color: var(--mute); max-width: 620px; margin: 0 auto 44px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
+.card .ic { font-size: 26px; margin-bottom: 10px; }
+.card h3 { font-size: 18px; margin-bottom: 6px; }
+.card p { color: var(--mute); font-size: 15px; }
+.card.big { grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center; }
+@media (max-width: 760px) { .card.big { grid-column: auto; grid-template-columns: 1fr; } }
+.card.big img { width: 100%; border-radius: 10px; border: 1px solid var(--line); }
+
+/* steps */
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; counter-reset: s; }
+.step { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 26px 22px 22px; }
+.step::before { counter-increment: s; content: counter(s); position: absolute; top: -14px; left: 22px; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 14px; background: var(--accent); color: #140b2e; }
+.step h3 { font-size: 17px; margin-bottom: 6px; }
+.step p { color: var(--mute); font-size: 15px; }
+.warn { margin-top: 18px; padding: 16px 20px; border-radius: 12px; border: 1px solid rgba(245,197,24,.35); background: rgba(245,197,24,.07); font-size: 15px; }
+.warn b { color: #f5c518; }
+
+/* faq */
+details { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px 20px; margin-bottom: 10px; }
+summary { cursor: pointer; font-weight: 600; list-style: none; }
+summary::after { content: "+"; float: right; color: var(--mute); }
+details[open] summary::after { content: "–"; }
+details p { color: var(--mute); margin-top: 10px; font-size: 15px; }
+.faq { max-width: 780px; margin: 0 auto; }
+
+footer { margin-top: 100px; border-top: 1px solid var(--line); padding: 30px 0 40px; color: var(--mute); font-size: 14px; }
+footer .wrap { display: flex; gap: 16px; flex-wrap: wrap; justify-content: space-between; }
+.final { text-align: center; padding: 100px 0 0; }
+code { background: #1c1a27; padding: 2px 6px; border-radius: 6px; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <a class="brand" href="#"><img src="img/icon.png" alt="">DBS</a>
+  <div class="links">
+    <a href="#fonctions">Fonctionnalités</a>
+    <a href="#installer">Installer</a>
+    <a href="#faq">FAQ</a>
+    <a class="gh" href="https://github.com/NezuFR/DBS">GitHub</a>
+  </div>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <span class="tag">🎉 <b>Gratuit</b> · Windows 10 &amp; 11 · <span id="ver">Nouvelle version</span></span>
+  <h1>Stream sur <span class="tw">Twitch</span> et <span class="kk">Kick</span> en même temps.</h1>
+  <p class="lead">DBS (Dual Broadcaster Software) diffuse ton live sur les deux plateformes à la fois, et enregistre une rediffusion <b>sans ta musique Spotify</b> : fini les VOD coupées pour copyright.</p>
+  <div class="cta">
+    <a class="btn main" id="dl" href="https://github.com/NezuFR/DBS/releases/latest/download/DBS-Windows.zip">⬇ Télécharger pour Windows</a>
+    <a class="btn" href="#installer">Comment l'installer ?</a>
+  </div>
+  <p class="small">Fichier .zip · environ 210 Mo · pas d'installation, pas de compte</p>
+  <div class="shot"><img src="img/dbs-main.webp" width="1440" height="900" alt="Interface de DBS : aperçu de l'écran de démarrage, scènes, sources, son et chat Twitch + Kick"></div>
+</div></header>
+
+<section id="fonctions"><div class="wrap">
+  <h2>Tout ce qu'il faut pour streamer</h2>
+  <p class="sub">Pensé pour être simple : tout est en français (et en 8 autres langues), tout se règle à la souris.</p>
+  <div class="grid">
+    <div class="card"><div class="ic">📡</div><h3>Twitch + Kick en même temps</h3><p>Un seul encodage envoyé aux deux plateformes. Si l'une coupe, DBS se reconnecte tout seul sans arrêter l'autre.</p></div>
+    <div class="card"><div class="ic">🎵</div><h3>Rediffusion sans musique</h3><p>Tes viewers entendent Spotify en live, mais la vidéo enregistrée ne le contient pas. Tu peux la poster partout sans souci de copyright.</p></div>
+    <div class="card"><div class="ic">🎬</div><h3>Scènes et sources</h3><p>Jeu, écran, webcam, images, vidéos, textes… Déplace, redimensionne et recadre directement dans l'aperçu, comme dans OBS.</p></div>
+    <div class="card"><div class="ic">🌐</div><h3>Overlays web</h3><p>Alertes, chat, trackers, objectifs : colle un lien, c'est reconnu tout seul, avec fond transparent.</p></div>
+    <div class="card"><div class="ic">✨</div><h3>Écrans animés</h3><p>Démarrage, Pause et Fin du live prêts à l'emploi, avec compte à rebours qui démarre tout seul.</p></div>
+    <div class="card"><div class="ic">💬</div><h3>Chat Twitch + Kick réuni</h3><p>Les deux chats dans une seule fenêtre, avec filtres, surlignage des mentions, anti-bots…</p></div>
+    <div class="card big"><div><div class="ic">⏱</div><h3>Délai anti stream-sniping, en plein live</h3><p>Ajoute ou retire du délai à tout moment sans couper le stream. Tes viewers ne voient ni image figée ni coupure : le live fait juste un bond en arrière ou en avant.</p></div><img src="img/dbs-delay.webp" loading="lazy" alt="Réglage du délai du stream"></div>
+    <div class="card"><div class="ic">🎚</div><h3>Son complet</h3><p>Plusieurs micros, entrées et sorties audio (GoXLR, Wave Link, Voicemeeter…), vumètres en temps réel, choix piste par piste de ce qui va dans la rediffusion.</p></div>
+    <div class="card"><div class="ic">⌨</div><h3>Raccourcis clavier</h3><p>Change de scène, coupe ton micro, lance le live… même quand tu es en jeu.</p></div>
+    <div class="card"><div class="ic">🚀</div><h3>Léger pour ton jeu</h3><p>Encodage par ta carte graphique, aperçu qui ralentit quand tu joues, rien ne tourne pour rien : le moins de FPS perdus possible.</p></div>
+    <div class="card"><div class="ic">🧩</div><h3>Interface à ton goût</h3><p>Déplace et masque les panneaux, choisis la couleur de l'appli et ta langue parmi 9.</p></div>
+  </div>
+</div></section>
+
+<section id="installer"><div class="wrap">
+  <h2>Installer DBS en 2 minutes</h2>
+  <p class="sub">Pas d'installateur, pas de compte : tu dézippes et c'est parti.</p>
+  <div class="steps">
+    <div class="step"><h3>Télécharge le .zip</h3><p>Clique sur « Télécharger pour Windows » en haut de la page.</p></div>
+    <div class="step"><h3>Dézippe-le</h3><p>Clic droit sur le fichier › « Extraire tout… », par exemple sur ton Bureau.</p></div>
+    <div class="step"><h3>Lance DBS.exe</h3><p>Choisis ta langue. Un raccourci est créé sur ton Bureau et dans le menu Démarrer.</p></div>
+    <div class="step"><h3>Ajoute tes clés</h3><p>⚙ Paramètres › colle ta clé Twitch et ta clé Kick. Fais un essai avec « Enregistrer seulement », puis passe en live !</p></div>
+  </div>
+  <div class="warn"><b>⚠ « Windows a protégé votre ordinateur » ?</b> C'est normal : DBS est gratuit et pas encore signé numériquement (un certificat coûte plusieurs centaines d'euros par an). Clique sur <b>« Informations complémentaires »</b> puis <b>« Exécuter quand même »</b>. Ce message n'apparaît qu'une fois.</div>
+</div></section>
+
+<section id="faq"><div class="wrap">
+  <h2>Questions fréquentes</h2>
+  <p class="sub"></p>
+  <div class="faq">
+    <details><summary>C'est vraiment gratuit ?</summary><p>Oui, totalement. Pas de pub, pas de compte, pas de filigrane.</p></details>
+    <details><summary>Ça marche avec quelle musique ?</summary><p>Spotify par défaut, mais tu peux choisir n'importe quelle appli (Deezer, Apple Music, YouTube Music dans un navigateur…). Elle est retirée de la rediffusion enregistrée, même si tu la lances en plein live.</p></details>
+    <details><summary>Les rediffusions automatiques de Twitch et Kick sont sans musique ?</summary><p>Non : celles-là sont faites par les plateformes à partir du live, donc avec la musique. Désactive-les (sur Twitch : « Stocker les anciennes diffusions ») et poste plutôt la vidéo sans musique que DBS enregistre dans <code>Vidéos\DBS</code>.</p></details>
+    <details><summary>Quelle connexion internet faut-il ?</summary><p>Pour streamer sur les deux plateformes en 6000 kbps, compte environ 16 Mb/s en upload. DBS t'indique le débit nécessaire dans ⚙ Paramètres › Vidéo.</p></details>
+    <details><summary>Quel PC faut-il ?</summary><p>Windows 10 (version 2004 ou plus récente) ou Windows 11, 64 bits. Une carte graphique récente (NVIDIA, AMD ou Intel) est conseillée pour encoder sans perdre de FPS en jeu.</p></details>
+    <details><summary>J'ai un problème, je fais comment ?</summary><p>Ouvre un ticket sur <a href="https://github.com/NezuFR/DBS/issues">la page GitHub</a> en expliquant ce qui se passe, et joins le fichier <code>journal.txt</code> qui se trouve à côté de DBS.exe.</p></details>
+  </div>
+</div></section>
+
+<section class="final"><div class="wrap">
+  <h2>Prêt à streamer partout ?</h2>
+  <div class="cta"><a class="btn main" href="https://github.com/NezuFR/DBS/releases/latest/download/DBS-Windows.zip">⬇ Télécharger DBS</a></div>
+</div></section>
+
+<footer><div class="wrap">
+  <span>DBS · Dual Broadcaster Software — par NezuFR</span>
+  <span><a href="https://github.com/NezuFR/DBS">GitHub</a> · <a href="https://github.com/NezuFR/DBS/releases">Toutes les versions</a> · <a href="https://github.com/NezuFR/DBS/issues">Signaler un problème</a></span>
+</div></footer>
+
+<script>
+// show the latest version number (no tracking, just the public GitHub API)
+fetch('https://api.github.com/repos/NezuFR/DBS/releases/latest').then((r) => r.ok ? r.json() : null).then((r) => {
+  if (r && r.tag_name) document.getElementById('ver').textContent = 'Version ' + r.tag_name.replace(/^v/, '');
+}).catch(() => {});
+</script>
+</body>
+</html>
